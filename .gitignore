@@ -1,0 +1,61 @@
+# ── Build Artifacts ──────────────────────────────────────────────────────────
+.gradle/
+.gradle-local/
+/build/
+**/build/
+frontend/build/
+
+# ── Dart / Flutter ───────────────────────────────────────────────────────────
+**/.dart_tool/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/.packages
+.pub-cache/
+.pub/
+
+# ── Android ──────────────────────────────────────────────────────────────────
+**/local.properties
+**/GeneratedPluginRegistrant.java
+**/key.properties
+**/*.keystore
+**/*.jks
+**/*.apk
+**/*.aab
+**/.cxx/
+
+# ── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+**/__pycache__/
+*.pyc
+**/*.pyc
+.venv/
+venv/
+env/
+
+# ── Environment & Secrets ────────────────────────────────────────────────────
+.env
+*.env
+**/*.env
+credentials.json
+backend/ngrok.yml
+
+# ── IDE & Editor ─────────────────────────────────────────────────────────────
+.idea/
+**/.idea/
+.vscode/
+**/.vscode/
+*.iml
+**/*.iml
+.DS_Store
+Thumbs.db
+
+# ── Backend Database ─────────────────────────────────────────────────────────
+*.db
+backend/instance/
+
+# ── Root-level model artifact copies ─────────────────────────────────────────
+# Deployed copies live in frontend/android/app/src/main/assets/ml/
+# These root copies are unused source files and should not be committed.
+/tinybert_sms_classifier.tflite
+/tokenizer.json
+/vocab.txt

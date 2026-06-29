@@ -1,0 +1,181 @@
+📄 PRODUCT REQUIREMENTS DOCUMENT (PRD)
+🧩 Product Name
+
+Wallupi
+
+🎯 1. Product Overview
+
+Wallupi is a UPI-based payment application with an integrated AI-powered fraud prevention system that detects, explains, and intervenes in potentially fraudulent financial activities in real time.
+
+It combines:
+
+Standard digital payment functionalities
+Intelligent scam detection using hybrid AI (on-device + cloud)
+Behavioral risk scoring for every transaction
+🎯 2. Objectives
+Enable seamless UPI-based transactions
+Prevent users from falling into financial scams
+Provide real-time, explainable risk insights
+Introduce friction only when risk is high
+Maintain user privacy through on-device intelligence
+👤 3. Target Users
+General UPI users
+First-time digital payment users
+Users vulnerable to scams (high-risk segments)
+⚙️ 4. Core Features (UPI App Functionality)
+4.1 User Account
+Mobile number login (OTP-based)
+Profile creation (name, bank selection)
+Link bank account (mock/simulated for prototype)
+4.2 Payment Features
+Send Money (UPI ID / phone number)
+Receive Money
+QR Code Scanner (camera-based)
+Transaction History
+🧠 5. Wallupi Intelligence Layer (Core Differentiator)
+🚨 5.1 SMS Fraud Detection System
+🔹 Flow:
+User gives permission for SMS access
+Incoming SMS is processed locally using lightweight model
+SMS classified as:
+Safe
+Suspicious
+🔹 On-Device Detection (Minor Model)
+Keyword + pattern-based detection:
+“urgent”
+“KYC blocked”
+“send money”
+Output:
+risk score (0–1)
+flags (urgency, payment request, unknown sender)
+🔹 Trigger Condition
+
+Cloud processing is triggered ONLY IF:
+
+SMS is suspicious
+AND
+User performs action:
+opens payment screen
+scans QR
+enters UPI ID
+☁️ Cloud Processing (Major Model Simulation)
+
+Input:
+
+SMS content (with consent)
+
+Output:
+
+Fraud score (0–100)
+Explanation:
+highlighted risky phrases
+reasoning breakdown
+Visual graph:
+risk factors contribution
+🔔 User Intervention
+Medium Risk:
+Warning popup
+Option to proceed
+High Risk:
+Strong warning
+
+Checkbox required:
+
+“I understand the risks and still want to proceed”
+
+Critical Risk:
+10-second delay before transaction
+Cancel option during delay
+🧠 5.2 Transaction Intention Scorer
+
+Every transaction is assigned a Suspicion Score (0–100)
+
+🔹 Inputs:
+User Profile:
+average transaction amount
+typical transaction time
+frequent recipients
+Recipient Profile:
+new vs existing payee
+merchant vs individual
+Relationship Profile:
+transaction frequency
+usual amount range
+Context:
+triggered via QR / link
+sudden navigation to payment screen
+🔹 Scoring System (Deterministic)
+Weighted scoring model
+Real-time computation
+🔹 Output:
+Suspicion Score displayed before payment
+Breakdown of contributing factors
+🔹 Intervention:
+Score Range	Action
+0–50	No warning
+50–80	Soft warning
+80–95	Strong warning
+95+	Delay + friction
+📞 5.3 Call-Aware Risk Boost (Advanced Feature)
+🔹 Functionality:
+Detect if user is on a call during transaction (with permission)
+No audio recording
+🔹 Effect:
+Suspicion score increases if:
+unknown number
+simultaneous payment activity
+🔐 Privacy:
+Only call state (active/inactive) used
+No content captured
+🧾 6. Data & Privacy
+Explicit user consent required for:
+SMS access
+call state detection
+On-device processing:
+SMS scanned locally first
+only flagged messages sent to cloud
+No permanent storage of personal messages
+🏗️ 7. System Architecture
+Frontend:
+Android App (Kotlin / Flutter)
+Backend:
+Node.js / Flask
+AI Layer:
+Local: rule-based / lightweight model
+Cloud: simulated LLM / API-based
+🔄 8. User Flow
+User logs in
+SMS received → locally analyzed
+User opens app to pay
+System checks:
+recent SMS risk
+transaction suspicion score
+If risk detected:
+warning displayed
+explanation shown
+User:
+proceeds OR cancels
+🧪 9. Prototype Scope (MUST-HAVE FOR HACKATHON)
+Include:
+Mock UPI flow (no real bank integration)
+Manual SMS input (simulate inbox)
+Risk scoring logic
+Warning UI
+Delay mechanism
+Exclude:
+Real UPI APIs
+Real banking integration
+🎨 10. UI Requirements
+Clean payment interface
+Warning popups:
+risk score
+explanation
+Graph visualization:
+risk factors
+📈 11. Success Metrics
+% of risky transactions flagged
+user interaction with warnings
+reduction in simulated fraud cases
+🎯 FINAL PRODUCT STATEMENT
+
+Wallupi is a smart payment system that not only enables transactions but actively protects users by detecting, explaining, and intervening in financial risks in real time.

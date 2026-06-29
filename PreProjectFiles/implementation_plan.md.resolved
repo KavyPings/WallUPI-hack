@@ -1,0 +1,222 @@
+# Wallupi — Implementation Plan
+
+A UPI-style payment application with integrated AI-powered fraud prevention. Mock banking, real fraud detection logic.
+
+## User Review Required
+
+> [!IMPORTANT]
+> **Flutter SDK**: This plan assumes you have Flutter SDK installed and configured. Please confirm you have:
+> - Flutter SDK installed (`flutter --version`)
+> - Android Studio or an Android emulator available
+> - Python 3.x installed for the Flask backend
+
+> [!WARNING]
+> **SMS & Call State**: The `telephony` and `phone_state` packages require Android. For the prototype, we'll implement manual SMS input simulation alongside the package integration so it works on emulators too.
+
+> [!IMPORTANT]
+> **QR Code Scanner**: The `mobile_scanner` package requires a camera. On emulators without camera, we'll provide a mock QR input fallback.
+
+---
+
+## Proposed Changes
+
+### Phase 1: Project Setup
+
+#### [NEW] Flutter Project
+- Create Flutter project at `c:\Users\Kavy Khilrani\Desktop\Projects\Wallupi\frontend\`
+- Configure `pubspec.yaml` with dependencies:
+  - `http` — REST API calls
+  - `shared_preferences` — Local storage
+  - `mobile_scanner` — QR code scanning
+  - `phone_state` — Call state detection
+  - `fl_chart` — Risk factor charts/graphs
+  - `google_fonts` — Poppins/Inter fonts
+  - `provider` — State management
+
+#### [NEW] Flask Backend
+- Create Flask project at `c:\Users\Kavy Khilrani\Desktop\Projects\Wallupi\backend\`
+- Files: `app.py`, `routes/`, `utils/`
+- Three API endpoints: `/analyze-sms`, `/risk-score`, `/explain-risk`
+
+---
+
+### Phase 2: Design System & Core Widgets
+
+#### [NEW] `lib/theme/app_theme.dart`
+- Color palette: Primary `#6C63FF`, Secondary `#00C2A8`, Danger `#FF4D4F`, Background `#F7F8FC`
+- Typography: Poppins headings, Inter body text
+- Size scale from design.txt
+
+#### [NEW] `lib/widgets/` — Reusable Components
+- `risk_indicator.dart` — Green/Yellow/Red risk badge with color transitions
+- `balance_card.dart` — Glassmorphism balance display card
+- `transaction_tile.dart` — Transaction list item with risk tag
+- `quick_action_button.dart` — Send/Receive/Scan circular buttons
+- `risk_chart.dart` — Bar/pie chart for risk factor breakdown
+- `countdown_timer.dart` — 10-second critical fraud timer
+- `highlighted_text.dart` — SMS text with risky words highlighted
+
+---
+
+### Phase 3: Screens (7 total from design.txt)
+
+#### [NEW] `lib/screens/home_screen.dart` — Home Screen
+- Greeting + profile avatar (top)
+- Balance card (glassmorphism, main focus)
+- Quick actions row: Send, Receive, Scan
+- Recent transactions list
+- Risk insights banner (if suspicious SMS detected)
+
+#### [NEW] `lib/screens/send_money_screen.dart` — Send Money
+- UPI ID / Phone number input
+- Amount input with currency formatting
+- Note/description field
+- Risk score badge near Pay button (always visible)
+- Auto-triggers risk check on Pay
+
+#### [NEW] `lib/screens/risk_warning_screen.dart` — Risk Warning
+- Header: "⚠️ High Risk Transaction"
+- Risk score display (87% example)
+- Bar/pie chart of risk factors
+- Breakdown: New recipient, High amount, External trigger
+- Highlighted SMS text (if exists)
+- Checkbox: "I understand the risks and still want to proceed"
+- Proceed / Cancel buttons
+
+#### [NEW] `lib/screens/critical_delay_screen.dart` — Critical Fraud
+- Full screen red alert
+- 10-second countdown timer (animated)
+- "Transaction paused for your safety"
+- Cancel (primary) / Continue (after timer expires)
+
+#### [NEW] `lib/screens/sms_analysis_screen.dart` — SMS Analysis
+- SMS message content display
+- Highlighted risky words (colored spans)
+- Risk score with visual indicator
+- Explanation breakdown
+
+#### [NEW] `lib/screens/profile_insights_screen.dart` — Profile Insights
+- Average transaction amount
+- Usual transaction time patterns
+- Frequent contacts list
+- User risk profile summary
+
+#### [NEW] `lib/screens/transaction_history_screen.dart` — Transaction History
+- List view of all transactions
+- Each item: amount, recipient, date, risk tag (Green/Yellow/Red)
+- Tap for detail view
+
+---
+
+### Phase 4: AI/Fraud Detection Logic
+
+#### [NEW] `lib/services/sms_detector.dart` — On-Device SMS Detection
+- Keyword detection: "urgent", "KYC", "blocked", "send money", "lottery", "prize", "OTP", "verify", "expire"
+- Pattern matching: phone numbers, URLs, urgency language
+- Output: risk score (0.0–1.0), flags list
+- Classification: Safe / Suspicious
+
+#### [NEW] `lib/services/risk_scorer.dart` — Transaction Intention Scorer
+- Weighted scoring model (0–100):
+  - **User Profile** (25%): avg transaction amt, typical time, frequency
+  - **Recipient Profile** (30%): new vs existing, merchant vs individual
+  - **Relationship Profile** (20%): transaction frequency, usual amount range
+  - **Context** (25%): QR/link trigger, SMS flag, call state, sudden navigation
+- Score ranges → interventions:
+  - 0–50: No warning
+  - 50–80: Soft warning
+  - 80–95: Strong warning + checkbox
+  - 95+: Delay + friction (10s)
+
+#### [NEW] `lib/services/call_state_service.dart` — Call-Aware Risk Boost
+- Detect if user is on active call
+- Boost suspicion score if: unknown number + simultaneous payment
+- Privacy: only call state (active/inactive), no audio
+
+---
+
+### Phase 5: Flask Backend
+
+#### [NEW] `backend/app.py` — Main Flask Application
+- CORS enabled for Flutter connection
+- Three routes registered
+
+#### [NEW] `backend/routes/analyze_sms.py` — `/analyze-sms` endpoint
+- Input: `{ "sms_text": "..." }`
+- Output: `{ "risk_score": 0-100, "explanation": "...", "highlighted_words": [...], "risk_factors": {...} }`
+- Rule-based analysis with weighted keyword scoring
+
+#### [NEW] `backend/routes/risk_score.py` — `/risk-score` endpoint
+- Input: `{ "amount", "recipient_id", "is_new_recipient", "user_avg_amount", "is_on_call", "has_suspicious_sms", ... }`
+- Output: `{ "score": 0-100, "factors": [...], "intervention_level": "none|soft|strong|critical" }`
+
+#### [NEW] `backend/routes/explain_risk.py` — `/explain-risk` endpoint
+- Input: `{ "score", "factors", "sms_text" }`
+- Output: `{ "explanation": "...", "breakdown": [...], "highlighted_phrases": [...] }`
+- Template-based explanation generator
+
+---
+
+### Phase 6: Services & Integration
+
+#### [NEW] `lib/services/api_service.dart` — Backend Communication
+- HTTP client for Flask backend
+- Methods: `analyzeSms()`, `getRiskScore()`, `explainRisk()`
+- Error handling with fallback to on-device logic
+
+#### [NEW] `lib/services/storage_service.dart` — Local Storage
+- SharedPreferences wrapper
+- Store: user profile, transaction history, risk data, SMS flags
+- JSON serialization for complex objects
+
+#### [NEW] `lib/services/payment_service.dart` — Mock Payment Flow
+- Simulate UPI payment processing
+- Generate transaction IDs
+- Mock success/failure responses
+- Integration with risk scorer
+
+---
+
+### Phase 7: UX Flows & Polish
+
+#### Flow 1: Normal Payment
+`Home → Send → Enter details → Risk check (low) → Pay → Success`
+
+#### Flow 2: Fraud Detection
+`SMS flagged → User opens Send Money → Risk screen appears → User decides`
+
+#### Flow 3: Critical Fraud
+`SMS flagged → High score (95+) → Delay screen (10s) → User forced to wait`
+
+#### Animations & Transitions
+- Smooth color transitions: green → yellow → red
+- Countdown timer animation
+- Risk score dial/gauge animation
+- Page transitions with Hero widgets
+
+---
+
+## Open Questions
+
+> [!IMPORTANT]
+> 1. **Do you have Flutter SDK installed?** If not, I'll include setup instructions.
+> 2. **Android emulator or physical device?** This affects QR scanner and call state testing.
+> 3. **Should the mock data include pre-loaded demo scenarios?** (e.g., pre-loaded suspicious SMS, pre-set recipient profiles for demo)
+
+## Verification Plan
+
+### Automated Tests
+- `flutter analyze` — Static analysis, no errors
+- `flutter test` — Unit tests for risk scoring engine
+- `python -m pytest` — Backend API tests
+- Manual testing of all 3 UX flows
+
+### Manual Verification
+1. Launch Flask backend → verify all 3 endpoints respond
+2. Launch Flutter app on emulator
+3. Test Flow 1: Normal payment (no warnings)
+4. Test Flow 2: Enter suspicious SMS → send money → warning appears
+5. Test Flow 3: Critical fraud → 10s delay screen
+6. Verify risk score breakdown chart renders
+7. Verify checkbox required for high-risk transactions
+8. Verify transaction history shows risk tags

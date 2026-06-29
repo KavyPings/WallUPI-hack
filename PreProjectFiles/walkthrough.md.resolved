@@ -1,0 +1,132 @@
+# Wallupi — Development Walkthrough
+
+## What Was Built
+
+A complete UPI-style payment app with AI fraud detection, implementing **every feature** from prd.txt.
+
+---
+
+## Project Structure
+
+```
+Wallupi/
+├── frontend/                    # Flutter app
+│   ├── lib/
+│   │   ├── main.dart            # Entry point + Provider setup
+│   │   ├── theme/
+│   │   │   └── app_theme.dart   # Design system (colors, fonts, shadows)
+│   │   ├── models/
+│   │   │   └── models.dart      # Data models (7 classes)
+│   │   ├── data/
+│   │   │   └── demo_data.dart   # Pre-loaded demo scenarios
+│   │   ├── providers/
+│   │   │   └── app_provider.dart # Central state management
+│   │   ├── services/
+│   │   │   ├── api_service.dart  # Backend REST client + offline fallback
+│   │   │   ├── sms_detector.dart # On-device fraud detection
+│   │   │   └── storage_service.dart # SharedPreferences wrapper
+│   │   └── screens/             # 9 screens
+│   │       ├── login_screen.dart
+│   │       ├── home_screen.dart
+│   │       ├── send_money_screen.dart
+│   │       ├── risk_warning_screen.dart
+│   │       ├── critical_delay_screen.dart
+│   │       ├── sms_analysis_screen.dart
+│   │       ├── profile_insights_screen.dart
+│   │       ├── transaction_history_screen.dart
+│   │       └── payment_success_screen.dart
+│   └── pubspec.yaml
+├── backend/
+│   ├── app.py                   # Flask server + CORS
+│   ├── requirements.txt
+│   └── routes/
+│       ├── analyze_sms.py       # /analyze-sms endpoint
+│       ├── risk_score.py        # /risk-score endpoint
+│       └── explain_risk.py      # /explain-risk endpoint
+├── SETUP_INSTRUCTIONS.md
+├── README.md
+└── tasks.md
+```
+
+---
+
+## Features Implemented (All from PRD)
+
+### ✅ Core Payment (Section 4)
+- Mock OTP login
+- Send money via UPI ID or phone
+- **QR Code Scanner** — dual mode: camera scan + image upload (works on both emulator and device)
+- Receive money (QR display)
+- Transaction history with risk tags
+
+### ✅ SMS Fraud Detection (Section 5.1)
+- **On-device** (local): Keyword detection across 8 categories (urgency, KYC scam, money request, prize scam, phishing, impersonation, OTP scam, financial threat)
+- **Cloud** (Flask): Deep rule-based analysis with URL detection, grammar analysis, capitalization detection
+- SMS inbox view + manual input + 4 quick templates
+- Risk score (0–100) + classification (safe/suspicious/high_risk)
+
+### ✅ Transaction Intention Scorer (Section 5.2)
+- **4-category weighted scoring**:
+  - User Profile (25%): amount deviation, unusual time, absolute amount
+  - Recipient Profile (30%): new vs existing, merchant vs individual, trust score
+  - Relationship Profile (20%): transaction count, usual amount range
+  - Context (25%): QR trigger, link trigger, SMS flag, call state, sudden navigation
+- Score ranges → interventions (exactly as PRD):
+  - 0–50: No warning
+  - 50–80: Soft warning popup
+  - 80–95: Strong warning + checkbox required
+  - 95+: 10-second delay + checkbox
+
+### ✅ Call-Aware Risk Boost (Section 5.3)
+- Demo toggle on home screen to simulate active call
+- Unknown caller toggle for higher boost
+- Only call state (no audio) — privacy safe
+
+### ✅ Risk Interventions (Section 5.1 User Intervention)
+- **Medium Risk**: Warning popup with risk factors
+- **High Risk**: Strong warning + checkbox "I understand the risks and still want to proceed"
+- **Critical Risk**: Full-screen dark alert + 10-second animated countdown + cancel option during delay
+
+### ✅ Explanation System
+- Risk factor breakdown with bar chart (FL Chart)
+- Highlighted SMS text (risky words in red/orange)
+- Expert analysis with advice (from /explain-risk API)
+- Contribution scores per factor
+
+---
+
+## Backend Testing Results
+
+```
+SMS Analysis Test:
+  Input: "URGENT: Your bank account BLOCKED due to KYC. Update at http://fake-bank.xyz/kyc"
+  Result: Score 86, Classification: high_risk, 4 risk factor categories detected
+
+API Endpoints:
+  ✅ POST /analyze-sms — Returns risk score, highlighted words, factor breakdown
+  ✅ POST /risk-score — Returns weighted score, intervention level, factors
+  ✅ POST /explain-risk — Returns narrative, detailed explanations, advice
+```
+
+---
+
+## Demo Data Pre-loaded
+
+| Type | Data |
+|------|------|
+| User | Kavya, ₹45,250 balance, avg txn ₹2,000 |
+| Known Recipients | Rahul Sharma, Priya Patel, Amazon Pay, Swiggy |
+| Suspicious Recipients | Unknown User, KYC Helpdesk |
+| Safe SMS | Bank credit notification, Amazon delivery |
+| Scam SMS | KYC blocked, Lottery prize, OTP request |
+| Transactions | 6 demo transactions (safe + risky + cancelled) |
+
+---
+
+## Next Steps (After Flutter Setup)
+
+1. Install Flutter SDK → see [SETUP_INSTRUCTIONS.md](file:///c:/Users/Kavy%20Khilrani/Desktop/Projects/Wallupi/SETUP_INSTRUCTIONS.md)
+2. Run `flutter pub get` in the `frontend/` directory
+3. Start backend: `python app.py` in `backend/`
+4. Run app: `flutter run` in `frontend/`
+5. Test all 3 flows (normal → fraud warning → critical delay)

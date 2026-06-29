@@ -1,0 +1,158 @@
+Design Reference (Your Base Inspiration)
+4
+
+The design you shared (Dribbble shot: Feenance Finance App) follows a modern fintech UI pattern:
+
+clean minimal layout
+soft gradients + glassmorphism
+card-based UI
+strong typography hierarchy
+quick action buttons (send / receive / scan)
+🧩 WALLUPI — DESIGN FILE (FIGMA STRUCTURE)
+
+I’ll give you a ready-to-build design system + screen structure so you (or your team) can directly recreate this in Figma.
+
+🎨 1. DESIGN SYSTEM
+🎯 Color Palette
+Primary: #6C63FF (soft fintech purple)
+Secondary: #00C2A8 (trust green)
+Danger (Fraud): #FF4D4F
+Background: #F7F8FC
+Cards: #FFFFFF
+🔤 Typography
+Heading: Poppins / Inter Bold
+Body: Inter Regular
+Size scale:
+H1: 24–28
+H2: 18–20
+Body: 14–16
+Caption: 12
+🧱 Components
+1. Card Component
+Rounded: 16px
+Shadow: soft (y: 4, blur: 12)
+Padding: 16
+2. Button Types
+Primary: filled (purple)
+Secondary: outline
+Danger: red
+3. Risk Indicator (NEW – YOUR USP)
+Green → Safe
+Yellow → Medium
+Red → High risk
+📱 2. SCREEN STRUCTURE
+🏠 1. HOME SCREEN
+Layout:
+Top: Greeting + profile
+Balance Card (main focus)
+Quick Actions:
+Send
+Receive
+Scan
+Below:
+Recent transactions
+Risk insights banner
+💸 2. SEND MONEY SCREEN
+Fields:
+Enter UPI ID / Phone
+Amount input
+Note
+Bottom:
+“Check Risk” (auto-trigger)
+🚨 3. RISK WARNING SCREEN (🔥 MOST IMPORTANT)
+Layout:
+
+Top:
+
+“⚠️ High Risk Transaction”
+
+Middle:
+
+Risk Score: 87%
+Graph (bar / pie)
+
+Breakdown:
+
+New recipient
+High amount
+External trigger
+
+Highlighted SMS text (if exists)
+
+Actions:
+✅ Proceed Anyway (checkbox required)
+❌ Cancel
+⏳ 4. CRITICAL FRAUD SCREEN
+
+When score > 95:
+
+Full screen alert
+Countdown timer (10 sec)
+
+“Transaction paused for your safety”
+
+Buttons:
+
+Cancel (primary)
+Continue (after timer)
+📩 5. SMS ANALYSIS SCREEN
+Shows:
+Message content
+Highlighted risky words
+Risk score
+📊 6. PROFILE INSIGHTS SCREEN
+Shows:
+Avg transaction
+Usual time
+Frequent contacts
+🔗 7. TRANSACTION HISTORY
+List view
+Each item shows:
+amount
+recipient
+risk tag
+🧠 3. UX FLOWS (CRITICAL FOR DEMO)
+🔄 FLOW 1: NORMAL PAYMENT
+
+Home → Send → Enter details → Pay → Success
+
+🚨 FLOW 2: FRAUD DETECTION
+
+SMS → flagged →
+User opens app →
+Send money →
+
+💥 Risk screen appears
+
+🔴 FLOW 3: CRITICAL FRAUD
+
+Same as above →
+High score →
+
+⏳ Delay screen →
+User forced to think
+
+🎯 4. WHAT MAKES YOUR DESIGN WIN
+
+Add these unique touches:
+
+🔥 1. Risk Score Always Visible
+Small badge near “Pay” button
+🔥 2. Color Psychology
+Smooth transition:
+green → yellow → red
+🔥 3. Explainability UI
+Graph + highlighted text
+🔥 4. Minimal Disruption
+Clean UI until risk appears
+🧱 5. FIGMA FILE STRUCTURE
+
+Create pages:
+
+Design System
+Components
+Screens
+Flows
+🎤 FINAL DESIGN POSITIONING
+
+“Wallupi looks like a clean, modern payment app — but transforms into a real-time financial safety system the moment risk is detected.”

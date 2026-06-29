@@ -1,0 +1,131 @@
+📄 TECH STACK — WALLUPI
+🎯 Core Principles
+✅ Zero cost (free tools only)
+✅ Easy to implement (no heavy ML / infra)
+✅ Runs locally without deployment issues
+✅ Fast prototyping (demo-ready)
+🧩 1. FRONTEND (Mobile App)
+📱 Framework: Flutter
+Why:
+Single codebase (Android ready)
+Fast UI building (perfect for hackathon)
+Clean fintech UI possible
+Tools:
+Dart (language)
+Flutter SDK (free)
+🧠 2. ON-DEVICE “AI” (Minor Model)
+⚙️ Approach: Rule-Based + Lightweight Logic
+Tech:
+Dart functions (inside Flutter)
+What it does:
+Keyword detection:
+“urgent”
+“KYC”
+“send money”
+Assigns risk score
+Why:
+No ML setup needed
+Instant execution
+Fully offline
+☁️ 3. CLOUD “AI” (Major Model Simulation)
+⚙️ Backend: Python (Flask)
+Why:
+Very easy to set up
+Runs locally
+Lightweight
+🧠 AI Simulation:
+Option A (Recommended):
+Rule-based explanation generator
+Option B (Optional):
+Use free APIs from Hugging Face (free tier)
+API Example:
+/analyze-sms
+Input: SMS text
+Output:
+risk score
+explanation
+highlighted words
+🗄️ 4. DATA STORAGE
+Option: Local Storage (No Database)
+Tech:
+Flutter:
+SharedPreferences OR local JSON
+Stores:
+user profile
+transaction history
+risk data
+📡 5. APP ↔ BACKEND CONNECTION
+Tech:
+HTTP (REST API)
+Library:
+http package (Flutter)
+📷 6. QR CODE SCANNING
+Package:
+mobile_scanner (Flutter)
+Why:
+Free
+Easy to integrate
+📞 7. CALL STATE DETECTION
+Package:
+phone_state (Flutter)
+Use:
+Detect if user is on call
+No audio access → privacy safe
+📩 8. SMS ACCESS (FOR DEMO)
+Package:
+telephony (Flutter)
+Use:
+Read SMS (with permission)
+OR simulate SMS input manually
+🎨 9. UI DESIGN IMPLEMENTATION
+Tools:
+Flutter widgets
+Material UI
+
+Optional:
+
+Figma (design reference only)
+🧪 10. TESTING & RUNNING
+Run Locally:
+Android Studio / VS Code
+Android Emulator OR physical device
+📦 11. PROJECT STRUCTURE
+wallupi/
+│
+├── frontend (Flutter)
+│   ├── screens/
+│   ├── widgets/
+│   ├── services/
+│
+├── backend (Flask)
+│   ├── app.py
+│   ├── routes/
+│   ├── utils/
+│
+⚙️ 12. DEPLOYMENT (OPTIONAL)
+
+Not required.
+
+👉 Run everything locally:
+
+Flask server → localhost
+Flutter app → emulator
+💸 COST BREAKDOWN
+Component	Cost
+Flutter	FREE
+Backend	FREE
+AI logic	FREE
+APIs	FREE tier
+Hosting	NOT NEEDED
+
+👉 Total Cost = ₹0
+
+🎯 FINAL STACK SUMMARY
+Frontend: Flutter
+Backend: Flask (Python)
+AI Layer: Rule-based + optional API
+Storage: Local
+Communication: REST API
+🎤 ONE-LINER FOR JUDGES
+
+“We use a lightweight, fully local-first architecture with optional cloud augmentation, ensuring zero cost, fast execution, and easy scalability.”

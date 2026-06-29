@@ -1,0 +1,16 @@
+{
+  "modelAssetPath": "ml/tinybert_sms_classifier.tflite",
+  "vocabAssetPath": "ml/tinybert_vocab.txt",
+  "tokenizerAssetPath": "ml/tokenizer.json",
+  "labels": [
+    "safe",
+    "fraud"
+  ],
+  "maxSeqLength": 128,
+  "lowConfidenceThreshold": 0.62,
+  "uncertainGapThreshold": 0.18,
+  "cloudEscalationMinRisk": 0.55,
+  "flaggedRiskThreshold": 0.45,
+  "ruleHighRiskThreshold": 0.85
+}
+
