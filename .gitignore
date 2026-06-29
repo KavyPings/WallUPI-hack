@@ -39,6 +39,11 @@ env/
 credentials.json
 backend/ngrok.yml
 
+# Firebase / Google services config (contains project API key)
+**/google-services.json
+**/GoogleService-Info.plist
+**/firebase_options.dart
+
 # ── IDE & Editor ─────────────────────────────────────────────────────────────
 .idea/
 **/.idea/
